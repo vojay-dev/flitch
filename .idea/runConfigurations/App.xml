@@ -3,7 +3,7 @@
     <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
     <option name="MAIN_CLASS_NAME" value="de.vojay.flitch.App" />
     <module name="flitch" />
-    <option name="PROGRAM_PARAMETERS" value="--twitchChannels vojay" />
+    <option name="PROGRAM_PARAMETERS" value="--twitchChannels vojay,valorant" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="de.vojay.flitch.*" />
