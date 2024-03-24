@@ -26,7 +26,7 @@ public class TwitchMessage {
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer("TwitchMessage{");
+		StringBuffer sb = new StringBuffer("TwitchMessage{");
 		sb.append("channel='").append(channel).append('\'');
 		sb.append(", user='").append(user).append('\'');
 		sb.append(", message='").append(message).append('\'');

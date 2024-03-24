@@ -14,32 +14,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class AnalyzeSentiment extends RichMapFunction<TwitchMessage, Tuple2<TwitchMessage, Tuple2<List<Integer>, List<String>>>> {
+public class AnalyzeSentiment extends RichMapFunction<
+	TwitchMessage,
+	Tuple2<TwitchMessage, Tuple2<List<Integer>, List<String>>>
+> {
 
 	private StanfordCoreNLP pipeline;
 
 
 	@Override
-	public void open(final Configuration configuration) {
-		final Properties properties = new Properties();
+	public void open(Configuration configuration) {
+		Properties properties = new Properties();
 		properties.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
 		pipeline = new StanfordCoreNLP(properties);
 	}
 
 	@Override
-	public Tuple2<TwitchMessage, Tuple2<List<Integer>, List<String>>> map(final TwitchMessage twitchMessage) {
+	public Tuple2<TwitchMessage, Tuple2<List<Integer>, List<String>>> map(TwitchMessage twitchMessage) {
 		return new Tuple2<>(twitchMessage, getSentiment(twitchMessage.getMessage()));
 	}
 
-	private Tuple2<List<Integer>, List<String>> getSentiment(final String message) {
-		final List<Integer> scores = new ArrayList<>();
-		final List<String> classes = new ArrayList<>();
+	private Tuple2<List<Integer>, List<String>> getSentiment(String message) {
+		List<Integer> scores = new ArrayList<>();
+		List<String> classes = new ArrayList<>();
 
 		if (message != null && !message.isEmpty()) {
-			final Annotation annotation = pipeline.process(message);
+			Annotation annotation = pipeline.process(message);
 
 			annotation.get(CoreAnnotations.SentencesAnnotation.class).forEach(sentence -> {
-				final Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
+				Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
 
 				classes.add(sentence.get(SentimentCoreAnnotations.SentimentClass.class));
 				scores.add(RNNCoreAnnotations.getPredictedClass(tree));

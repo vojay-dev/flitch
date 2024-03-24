@@ -4,6 +4,7 @@ import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.TwitchClient;
 import com.github.twitch4j.TwitchClientBuilder;
 import com.github.twitch4j.chat.events.channel.IRCMessageEvent;
+import com.github.twitch4j.common.events.domain.EventUser;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
@@ -15,18 +16,18 @@ public class TwitchSource extends RichSourceFunction<TwitchMessage> {
 	private SimpleEventHandler eventHandler;
 	private boolean running = true;
 
-	public TwitchSource(final String[] twitchChannels) {
+	public TwitchSource(String[] twitchChannels) {
 		this.twitchChannels = twitchChannels;
 	}
 
 	@Override
-	public void open(final Configuration configuration) {
-		final TwitchClientBuilder clientBuilder = TwitchClientBuilder.builder();
-		client = clientBuilder
+	public void open(Configuration configuration) {
+		client = TwitchClientBuilder
+			.builder()
 			.withEnableChat(true)
 			.build();
 
-		for(final String channel : twitchChannels) {
+		for(String channel : twitchChannels) {
 			client.getChat().joinChannel(channel);
 		}
 
@@ -35,11 +36,12 @@ public class TwitchSource extends RichSourceFunction<TwitchMessage> {
 	}
 
 	@Override
-	public void run(final SourceContext<TwitchMessage> ctx) throws InterruptedException {
+	public void run(SourceContext<TwitchMessage> ctx) throws InterruptedException {
 		eventHandler.onEvent(IRCMessageEvent.class, event -> {
-			final String channel = event.getChannel().getName();
-			final String user = event.getUser() == null ? "" : event.getUser().getName();
-			final String message = event.getMessage().orElseGet(String::new);
+			String channel = event.getChannel().getName();
+			EventUser eventUser = event.getUser();
+			String user = eventUser == null ? "" : eventUser.getName();
+			String message = event.getMessage().orElseGet(String::new);
 
 			ctx.collect(new TwitchMessage(channel, user, message));
 		});
