@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="App" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="INCLUDE_PROVIDED_SCOPE" value="true" />
+    <option name="MAIN_CLASS_NAME" value="de.vojay.flitch.App" />
+    <module name="flitch" />
+    <option name="PROGRAM_PARAMETERS" value="--twitchChannels vojay" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.vojay.flitch.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
