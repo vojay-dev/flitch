@@ -7,10 +7,14 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 public class App {
 
 	public static void main(String[] args) throws Exception {
-		StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(new Configuration());
+		StreamExecutionEnvironment env = StreamExecutionEnvironment
+			.createLocalEnvironmentWithWebUI(new Configuration());
 
 		ParameterTool parameters = ParameterTool.fromArgs(args);
-		String[] twitchChannels = parameters.getRequired("twitchChannels").trim().split(",");
+		String[] twitchChannels = parameters
+			.getRequired("twitchChannels")
+			.trim()
+			.split(",");
 
 		env
 			.addSource(new TwitchSource(twitchChannels))
